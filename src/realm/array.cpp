@@ -2326,21 +2326,63 @@ void Array::to_dot(std::ostream& out, StringData title) const
     out << "</FONT></TD>" << std::endl;
 
     // Values
+    const size_t SHOW_THRESHOLD = 10;
+    realm::util::Optional<size_t> omit_start;
     for (size_t i = 0; i < m_size; ++i) {
+        auto end_omit = [&]() {
+            if (!omit_start)
+                return;
+
+            size_t omit_count = i - omit_start.value();
+            if (omit_count == 1) {
+                out << "<TD BGCOLOR=\"grey90\">" << (uint64_t(get(omit_start.value())) >> 1) << "</TD>" << std::endl;
+            }
+            else {
+                out << "<TD BGCOLOR=\"grey90\">... (" << omit_count << " elements)</TD>" << std::endl;
+            }
+            omit_start = realm::util::none;
+        };
+
         int64_t v = get(i);
-        if (m_has_refs) {
-            // zero-refs and refs that are not 64-aligned do not point to sub-trees
-            if (v == 0)
-                out << "<TD>none";
-            else if (v & 0x1)
-                out << "<TD BGCOLOR=\"grey90\">" << (uint64_t(v) >> 1);
-            else
-                out << "<TD PORT=\"" << i << "\">";
+        bool is_ref = m_has_refs && !(v & 0x1);
+
+        if (!is_ref && i >= SHOW_THRESHOLD - 1 && i < m_size - 1) {
+            bool print_this;
+
+            if (omit_start) {
+                bool next_is_ref = m_has_refs && !(get(i + 1) & 0x1);
+                print_this = next_is_ref;
+            }
+            else {
+                bool prev_is_ref = m_has_refs && !(get(i - 1) & 0x1);
+                print_this = prev_is_ref;
+            }
+
+            if (print_this) {
+                end_omit();
+                out << "<TD BGCOLOR=\"grey90\">" << (uint64_t(v) >> 1) << "</TD>" << std::endl;
+            }
+            else if (!omit_start) {
+                omit_start = i;
+            }
         }
         else {
-            out << "<TD>" << v;
+            end_omit();
+
+            if (m_has_refs) {
+                // zero-refs and refs that are not 64-aligned do not point to sub-trees
+                if (v == 0)
+                    out << "<TD>none";
+                else if (v & 0x1)
+                    out << "<TD BGCOLOR=\"grey90\">" << (uint64_t(v) >> 1);
+                else
+                    out << "<TD PORT=\"" << i << "\">";
+            }
+            else {
+                out << "<TD>" << v;
+            }
+            out << "</TD>" << std::endl;
         }
-        out << "</TD>" << std::endl;
     }
 
     out << "</TR></TABLE>>];" << std::endl;

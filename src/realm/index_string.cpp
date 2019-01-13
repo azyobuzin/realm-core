@@ -1778,6 +1778,11 @@ void StringIndex::keys_to_dot(std::ostream& out, const Array& array, StringData 
     // Values
     size_t count = array.size();
     for (size_t i = 0; i < count; ++i) {
+        if (i == 9 && count > 10) {
+            out << "<TD>... (total " << count << " elements)</TD>" << std::endl;
+            break;
+        }
+
         uint64_t v = array.get(i); // Never right shift signed values
 
         int str[4];
@@ -1786,8 +1791,8 @@ void StringIndex::keys_to_dot(std::ostream& out, const Array& array, StringData 
         str[1] = (v >> 16) & 0xFF;
         str[0] = (v >> 24) & 0xFF;
 
-        out << "<TD>0x" << std::hex << str[0] << " 0x" << std::hex << str[1] << " 0x" << std::hex << str[2] << " 0x"
-            << std::hex << str[3] << "</TD>" << std::endl;
+        out << "<TD>0x" << std::hex << str[0] << " 0x" << str[1] << " 0x" << str[2] << " 0x"
+            << str[3] << std::dec << "</TD>" << std::endl;
 	}
 
     out << "</TR></TABLE>>];" << std::endl;

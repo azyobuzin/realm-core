@@ -433,7 +433,7 @@ void BasicArray<T>::to_dot(std::ostream& out, StringData title) const
     ref_type ref = get_ref();
     if (title.size() != 0) {
         out << "subgraph cluster_" << ref << " {\n";
-        out << " label = \"" << title << "\";\n";
+        out << " label = \"" << dot_escape_quote(title) << "\";\n";
         out << " color = white;\n";
     }
 
@@ -447,8 +447,14 @@ void BasicArray<T>::to_dot(std::ostream& out, StringData title) const
 
     // Values
     size_t n = m_size;
-    for (size_t i = 0; i != n; ++i)
+    for (size_t i = 0; i != n; ++i) {
+        if (i == 9 && n > 10) {
+            out << "<TD>... (total " << n << " elements)</TD>" << std::endl;
+            break;
+        }
+
         out << "<TD>" << get(i) << "</TD>\n";
+    }
 
     out << "</TR></TABLE>>];\n";
 

@@ -394,8 +394,14 @@ void ArrayString::to_dot(std::ostream& out, StringData title) const
     out << "<TD BGCOLOR=\"lightgrey\"><FONT POINT-SIZE=\"7\">";
     out << "0x" << std::hex << ref << std::dec << "</FONT></TD>" << std::endl;
 
-    for (size_t i = 0; i < m_size; ++i)
+    for (size_t i = 0; i < m_size; ++i) {
+        if (i == 9 && m_size > 10) {
+            out << "<TD>... (total " << m_size << " elements)</TD>" << std::endl;
+            break;
+        }
+
         out << "<TD>\"" << get(i) << "\"</TD>" << std::endl;
+    }
 
     out << "</TR></TABLE>>];" << std::endl;
 
