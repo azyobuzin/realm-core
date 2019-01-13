@@ -413,7 +413,7 @@ void StringEnumColumn::to_dot(std::ostream& out, StringData title) const
     out << "subgraph cluster_string_enum_column" << ref << " {" << std::endl;
     out << " label = \"String enum column";
     if (title.size() != 0)
-        out << "\\n'" << title << "'";
+        out << "\\n'" << dot_escape_quote(title) << "'";
     out << "\";" << std::endl;
 
     m_keys.to_dot(out, "keys");

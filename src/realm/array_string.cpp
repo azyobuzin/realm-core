@@ -400,7 +400,7 @@ void ArrayString::to_dot(std::ostream& out, StringData title) const
             break;
         }
 
-        out << "<TD>\"" << get(i) << "\"</TD>" << std::endl;
+        out << "<TD>\"" << dot_escape_html(get(i)) << "\"</TD>" << std::endl;
     }
 
     out << "</TR></TABLE>>];" << std::endl;

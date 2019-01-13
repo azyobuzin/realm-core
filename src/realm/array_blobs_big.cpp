@@ -244,7 +244,7 @@ void ArrayBigBlobs::to_dot(std::ostream& out, bool, StringData title) const
     out << "subgraph cluster_binary" << ref << " {" << std::endl;
     out << " label = \"ArrayBinary";
     if (title.size() != 0)
-        out << "\\n'" << title << "'";
+        out << "\\n'" << dot_escape_quote(title) << "'";
     out << "\";" << std::endl;
 
     Array::to_dot(out, "big_blobs_leaf");

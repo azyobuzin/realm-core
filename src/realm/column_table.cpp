@@ -461,7 +461,7 @@ void SubtableColumn::to_dot(std::ostream& out, StringData title) const
     out << "subgraph cluster_subtable_column" << ref << " {" << std::endl;
     out << " label = \"Subtable column";
     if (title.size() != 0)
-        out << "\\n'" << title << "'";
+        out << "\\n'" << dot_escape_quote(title) << "'";
     out << "\";" << std::endl;
     tree_to_dot(out);
     out << "}" << std::endl;

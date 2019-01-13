@@ -297,7 +297,7 @@ void ArrayStringLong::to_dot(std::ostream& out, StringData title) const
     out << "subgraph cluster_arraystringlong" << ref << " {" << std::endl;
     out << " label = \"ArrayStringLong";
     if (title.size() != 0)
-        out << "\\n'" << title << "'";
+        out << "\\n'" << dot_escape_quote(title) << "'";
     out << "\";" << std::endl;
 
     Array::to_dot(out, "stringlong_top");

@@ -572,7 +572,7 @@ void MixedColumn::to_dot(std::ostream& out, StringData title) const
     out << "subgraph cluster_mixed_column" << ref << " {" << std::endl;
     out << " label = \"Mixed column";
     if (title.size() != 0)
-        out << "\\n'" << title << "'";
+        out << "\\n'" << dot_escape_quote(title) << "'";
     out << "\";" << std::endl;
 
     m_array->to_dot(out, "mixed_top");
