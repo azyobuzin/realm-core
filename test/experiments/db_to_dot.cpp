@@ -30,11 +30,11 @@ int main(int argc, const char* const argv[])
                   << argv[0] << "  DATABASE-FILE" << std::endl;
         return 1;
     }
-    Group g(argv[1], GROUP_READONLY);
-    if (!g.is_valid()) {
+    Group g(argv[1], nullptr, Group::mode_ReadOnly);
+    if (!g.is_attached()) {
         std::cerr << "Failed to open Realm database '" << argv[1] << "'" << std::endl;
         return 1;
     }
-    g.to_dot(cout);
+    g.to_dot(std::cout);
     return 0;
 }

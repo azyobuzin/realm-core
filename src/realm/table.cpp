@@ -6494,7 +6494,7 @@ void Table::to_dot(std::ostream& out, StringData title) const
         out << "subgraph cluster_table_with_spec" << m_top.get_ref() << " {" << std::endl;
         out << " label = \"Table";
         if (0 < title.size())
-            out << "\\n'" << title << "'";
+            out << "\\n'" << dot_escape_quote(title) << "'";
         out << "\";" << std::endl;
         m_top.to_dot(out, "table_top");
         m_spec->to_dot(out);
@@ -6503,7 +6503,7 @@ void Table::to_dot(std::ostream& out, StringData title) const
         out << "subgraph cluster_table_" << m_columns.get_ref() << " {" << std::endl;
         out << " label = \"Table";
         if (0 < title.size())
-            out << " " << title;
+            out << " " << dot_escape_quote(title);
         out << "\";" << std::endl;
     }
 

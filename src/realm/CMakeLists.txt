@@ -48,6 +48,7 @@ set(REALM_SOURCES
     util/base64.cpp
     util/basic_system_errors.cpp
     util/encrypted_file_mapping.cpp
+    util/dot_util.cpp
     util/file.cpp
     util/file_mapper.cpp
     util/interprocess_condvar.cpp
@@ -155,6 +156,7 @@ set(REALM_INSTALL_UTIL_HEADERS
     util/buffer.hpp
     util/call_with_tuple.hpp
     util/cf_ptr.hpp
+    util/dot_util.hpp
     util/encrypted_file_mapping.hpp
     util/features.h
     util/file.hpp

@@ -625,7 +625,7 @@ void Spec::to_dot(std::ostream& out, StringData title) const
     ref_type top_ref = m_top.get_ref();
 
     out << "subgraph cluster_specset" << top_ref << " {" << std::endl;
-    out << " label = \"specset " << title << "\";" << std::endl;
+    out << " label = \"specset " << dot_escape_quote(title) << "\";" << std::endl;
 
     std::string types_name = "types (" + util::to_string(m_types.size()) + ")";
     std::string names_name = "names (" + util::to_string(m_names.size()) + ")";

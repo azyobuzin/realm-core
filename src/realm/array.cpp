@@ -2307,7 +2307,7 @@ void Array::to_dot(std::ostream& out, StringData title) const
 
     if (title.size() != 0) {
         out << "subgraph cluster_" << ref << " {" << std::endl;
-        out << " label = \"" << title << "\";" << std::endl;
+        out << " label = \"" << dot_escape_quote(title) << "\";" << std::endl;
         out << " color = white;" << std::endl;
     }
 

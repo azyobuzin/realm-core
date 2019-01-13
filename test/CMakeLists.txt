@@ -9,6 +9,8 @@ add_subdirectory(benchmark-common-tasks)
 add_subdirectory(benchmark-crud)
 # FIXME: Add other benchmarks
 
+add_subdirectory(experiments)
+
 set(NORMAL_TESTS
     test_all.cpp
     test_alloc.cpp

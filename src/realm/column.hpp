@@ -35,6 +35,7 @@
 #include <realm/impl/destroy_guard.hpp>
 #include <realm/exceptions.hpp>
 #include <realm/table_ref.hpp>
+#include <realm/util/dot_util.hpp>
 
 namespace realm {
 
@@ -1634,7 +1635,7 @@ void Column<T>::to_dot(std::ostream& out, StringData title) const
     out << "subgraph cluster_integer_column" << ref << " {" << std::endl;
     out << " label = \"Integer column";
     if (title.size() != 0)
-        out << "\\n'" << title << "'";
+        out << "\\n'" << dot_escape_quote(title) << "'";
     out << "\";" << std::endl;
     tree_to_dot(out);
     out << "}" << std::endl;

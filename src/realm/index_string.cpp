@@ -1702,7 +1702,7 @@ void StringIndex::to_dot_2(std::ostream& out, StringData title) const
     out << "subgraph cluster_string_index" << ref << " {" << std::endl;
     out << " label = \"Search index";
     if (title.size() != 0)
-        out << "\\n'" << title << "'";
+        out << "\\n'" << dot_escape_quote(title) << "'";
     out << "\";" << std::endl;
 
     array_to_dot(out, *m_array);
@@ -1759,7 +1759,7 @@ void StringIndex::keys_to_dot(std::ostream& out, const Array& array, StringData 
 
     if (0 < title.size()) {
         out << "subgraph cluster_" << ref << " {" << std::endl;
-        out << " label = \"" << title << "\";" << std::endl;
+        out << " label = \"" << dot_escape_quote(title) << "\";" << std::endl;
         out << " color = white;" << std::endl;
     }
 
@@ -1780,15 +1780,15 @@ void StringIndex::keys_to_dot(std::ostream& out, const Array& array, StringData 
     for (size_t i = 0; i < count; ++i) {
         uint64_t v = array.get(i); // Never right shift signed values
 
-        char str[5] = "\0\0\0\0";
-        str[3] = char(v & 0xFF);
-        str[2] = char((v >> 8) & 0xFF);
-        str[1] = char((v >> 16) & 0xFF);
-        str[0] = char((v >> 24) & 0xFF);
-        const char* s = str;
+        int str[4];
+        str[3] = v & 0xFF;
+        str[2] = (v >> 8) & 0xFF;
+        str[1] = (v >> 16) & 0xFF;
+        str[0] = (v >> 24) & 0xFF;
 
-        out << "<TD>" << s << "</TD>" << std::endl;
-    }
+        out << "<TD>0x" << std::hex << str[0] << " 0x" << std::hex << str[1] << " 0x" << std::hex << str[2] << " 0x"
+            << std::hex << str[3] << "</TD>" << std::endl;
+	}
 
     out << "</TR></TABLE>>];" << std::endl;
     if (0 < title.size())
