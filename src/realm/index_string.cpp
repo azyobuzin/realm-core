@@ -1711,7 +1711,7 @@ void StringIndex::to_dot_2(std::ostream& out, StringData title) const
 }
 
 
-void StringIndex::array_to_dot(std::ostream& out, const Array& array)
+void StringIndex::array_to_dot(std::ostream& out, const Array& array) const
 {
     if (!array.get_context_flag()) {
         IntegerColumn col(array.get_alloc(), array.get_ref()); // Throws
@@ -1753,7 +1753,7 @@ void StringIndex::array_to_dot(std::ostream& out, const Array& array)
 }
 
 
-void StringIndex::keys_to_dot(std::ostream& out, const Array& array, StringData title)
+void StringIndex::keys_to_dot(std::ostream& out, const Array& array, StringData title) const
 {
     ref_type ref = array.get_ref();
 
@@ -1776,6 +1776,8 @@ void StringIndex::keys_to_dot(std::ostream& out, const Array& array, StringData 
     out << "</FONT></TD>" << std::endl;
 
     // Values
+    bool is_string_column =
+        typeid(*m_target_column) == typeid(StringColumn) || typeid(*m_target_column) == typeid(StringEnumColumn);
     size_t count = array.size();
     for (size_t i = 0; i < count; ++i) {
         if (i == 9 && count > 10) {
@@ -1785,15 +1787,32 @@ void StringIndex::keys_to_dot(std::ostream& out, const Array& array, StringData 
 
         uint64_t v = array.get(i); // Never right shift signed values
 
-        int str[4];
-        str[3] = v & 0xFF;
-        str[2] = (v >> 8) & 0xFF;
-        str[1] = (v >> 16) & 0xFF;
-        str[0] = (v >> 24) & 0xFF;
+        if (is_string_column) {
+            char str[5] = "\0\0\0\0";
+            str[3] = char(v & 0xFF);
+            str[2] = char((v >> 8) & 0xFF);
+            str[1] = char((v >> 16) & 0xFF);
+            str[0] = char((v >> 24) & 0xFF);
+            const char* s = str;
 
-        out << "<TD>0x" << std::hex << str[0] << " 0x" << str[1] << " 0x" << str[2] << " 0x"
-            << str[3] << std::dec << "</TD>" << std::endl;
-	}
+            bool is_ascii = true;
+            for (const char* c = s; *c; ++c) {
+                if ((unsigned char)*c > 127) {
+                    is_ascii = false;
+                    break;
+                }
+            }
+
+            if (is_ascii) {
+                out << "<TD>" << dot_escape_html(s) << "</TD>" << std::endl;
+                continue;
+            }
+
+            // it is hard to do UTF-8 validation
+        }
+
+        out << "<TD>0x" << std::hex << v << std::dec << "</TD>" << std::endl;
+    }
 
     out << "</TR></TABLE>>];" << std::endl;
     if (0 < title.size())

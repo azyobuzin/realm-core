@@ -257,8 +257,8 @@ private:
 
 #ifdef REALM_DEBUG
     static void dump_node_structure(const Array& node, std::ostream&, int level);
-    static void array_to_dot(std::ostream&, const Array&);
-    static void keys_to_dot(std::ostream&, const Array&, StringData title = StringData());
+    void array_to_dot(std::ostream&, const Array&) const;
+    void keys_to_dot(std::ostream&, const Array&, StringData title = StringData()) const;
 #endif
 };
 
