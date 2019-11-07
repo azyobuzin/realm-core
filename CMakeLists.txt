@@ -63,24 +63,8 @@ if(MSVC)
     add_definitions(
         /D_DISABLE_EXTENDED_ALIGNED_STORAGE #https://developercommunity.visualstudio.com/comments/279328/view.html
     )
+    add_definitions(-D_SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING)
     if(NOT WINDOWS_STORE)
-        # Statically link the run-time library
-        # https://docs.microsoft.com/bg-bg/cpp/build/reference/md-mt-ld-use-run-time-library
-        # https://cmake.org/Wiki/CMake_FAQ#How_can_I_build_my_MSVC_application_with_a_static_runtime.3F
-        foreach(flag_var
-            CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-            CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-            if(${flag_var} MATCHES "/MD")
-                string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-            endif()
-
-            # Disable runtime stack bound checks, because these slow down unit tests
-            # disproportionately.
-            if(${flag_var} MATCHES "/RTC")
-                string(REGEX REPLACE "/RTC(su|[1su])" "" ${flag_var} "${${flag_var}}")
-            endif()
-        endforeach()
-
         # Let the compiler optimize debug builds ever so slightly.
         # /Ob1: This allows the compiler to inline functions marked __inline.
         # /Oi:  This enables (faster) intrinsic functions.
